@@ -1,0 +1,601 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #f5f5f7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.scroll-trigger {
+    height: 500vh;
+    position: relative;
+    z-index: 1;
+}
+
+.sticky-viewport {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    overflow: visible;
+    /* Add padding to prevent text clipping */
+    padding: 2vh 2vw;
+}
+
+.brand-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 12vw;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-align: center;
+    background: linear-gradient(180deg, #ffffff 0%, #c6c6c6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    will-change: font-size, opacity, filter;
+    /* Improve text rendering quality */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Force hardware acceleration */
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+    /* Prevent text selection and improve rendering */
+    user-select: none;
+    -webkit-user-select: none;
+    /* Ensure proper centering and prevent clipping */
+    margin: 0;
+    padding: 0.15em 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    /* Prevent text clipping */
+    overflow: visible;
+    /* Add slight rounding effect with font-feature-settings */
+    font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+.next-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    padding: 14px 34px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    color: #000;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+.next-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 35px rgba(255, 255, 255, 0.25);
+}
+
+.next-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Statistics Slide Styles */
+.stats-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    padding: 4vh 5vw;
+    overflow-y: auto;
+}
+
+.stats-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.stats-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 4vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.stats-slide.visible .stats-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+}
+
+.stats-container {
+    width: 100%;
+    max-width: 1400px;
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 3vh 3vw;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: stretch;
+    margin: 0 auto;
+}
+
+.stats-slide.visible .stats-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s;
+}
+
+.stat-card {
+    background: rgba(255, 255, 255, 0.05);
+    backdrop-filter: blur(20px);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    border-radius: 20px;
+    padding: 3.5vh 2.5vw;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1), background 0.3s ease;
+    min-height: 320px;
+}
+
+/* Layout: All cards span 1 column by default */
+.stats-container .stat-card {
+    grid-column: span 1;
+    width: 100%;
+}
+
+/* Last 2 cards will naturally be in columns 1 and 2, 
+   which creates a visually centered appearance (2 out of 3 columns) */
+
+.stats-slide.visible .stat-card {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+.stats-slide.visible .stat-card:nth-child(1) { transition-delay: 0.4s; }
+.stats-slide.visible .stat-card:nth-child(2) { transition-delay: 0.5s; }
+
+.stat-card:hover {
+    background: rgba(255, 255, 255, 0.08);
+    transform: translateY(-4px);
+}
+
+.stat-icon {
+    font-size: 2.5rem;
+    text-align: center;
+    margin-bottom: 0.8vh;
+}
+
+.stat-category {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.95rem, 1.6vw, 1.2rem);
+    font-weight: 600;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2vh;
+    letter-spacing: -0.01em;
+    line-height: 1.4;
+}
+
+.stat-content {
+    display: flex;
+    flex-direction: column;
+    gap: 1.2vh;
+}
+
+.stat-item {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1vh 0;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+}
+
+.stat-item:last-child {
+    border-bottom: none;
+}
+
+.stat-label {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: -0.01em;
+}
+
+.stat-value {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.95rem, 1.5vw, 1.2rem);
+    font-weight: 600;
+    color: #ffffff;
+    letter-spacing: -0.01em;
+}
+
+
+/* For smaller screens, stack cards vertically */
+@media (max-width: 900px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+        max-width: 100%;
+        gap: 3vh;
+    }
+    
+    .stats-container .stat-card {
+        grid-column: span 1;
+    }
+    
+    .stat-card {
+        min-height: auto;
+    }
+}
+
+@media (max-width: 768px) {
+    .stats-container {
+        grid-template-columns: 1fr;
+        gap: 3vh;
+        max-width: 100%;
+    }
+    
+    .stats-container .stat-card:nth-child(3) {
+        grid-column: 1;
+        max-width: 100%;
+    }
+    
+    .stat-card {
+        padding: 3vh 4vw;
+        max-width: 100%;
+        min-height: auto;
+    }
+    
+    .stats-slide {
+        padding: 4vh 4vw;
+    }
+    
+    .stats-title {
+        margin-bottom: 3vh;
+        font-size: clamp(1.8rem, 6vw, 3rem);
+    }
+}
+
+/* Icons Slide Styles */
+.icons-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.75);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+}
+
+.icons-slide.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.question-text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 8vh;
+    opacity: 0;
+    transform: translateY(-60px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    -webkit-user-select: none;
+    line-height: 1.3;
+    padding: 0 4vw;
+}
+
+.question-part-2 {
+    display: inline-block;
+}
+
+.typing-cursor {
+    display: inline-block;
+    color: #ffffff;
+    font-weight: 300;
+    animation: blink 1s infinite;
+    margin-left: 2px;
+}
+
+.typing-cursor.hidden {
+    display: none;
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
+.icons-slide.visible .question-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+.icons-container {
+    display: flex;
+    gap: 8vw;
+    align-items: center;
+    justify-content: center;
+    flex-wrap: wrap;
+    padding: 4vw;
+    margin-top: 4vh;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icons-slide.visible .icon-wrapper {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.icons-slide.visible .icon-wrapper:nth-child(1) {
+    transition-delay: 0s;
+}
+
+.icons-slide.visible .icon-wrapper:nth-child(2) {
+    transition-delay: 0.05s;
+}
+
+.icon {
+    width: 20vw;
+    height: auto;
+    max-width: 300px;
+    min-width: 150px;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(255, 255, 255, 0.1));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.icon:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 25px 50px rgba(255, 255, 255, 0.2));
+}
+
+@media (max-width: 768px) {
+    .icons-container {
+        gap: 6vw;
+        flex-direction: column;
+    }
+    
+    .icon {
+        width: 30vw;
+        min-width: 120px;
+    }
+}
+
+/* Comparison Chart Slide Styles */
+.comparison-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    padding: 8vh 6vw;
+    overflow-y: auto;
+}
+
+.comparison-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.comparison-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2.5rem, 6vw, 5rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 6vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.comparison-slide.visible .comparison-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.chart-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2.5vh;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.comparison-slide.visible .chart-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
+
+.chart-item {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    align-items: center;
+    gap: 2vw;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+}
+
+.comparison-slide.visible .chart-item {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.comparison-slide.visible .chart-item:nth-child(1) { transition-delay: 0.5s; }
+.comparison-slide.visible .chart-item:nth-child(2) { transition-delay: 0.6s; }
+.comparison-slide.visible .chart-item:nth-child(3) { transition-delay: 0.7s; }
+.comparison-slide.visible .chart-item:nth-child(4) { transition-delay: 0.8s; }
+.comparison-slide.visible .chart-item:nth-child(5) { transition-delay: 0.9s; }
+.comparison-slide.visible .chart-item:nth-child(6) { transition-delay: 1.0s; }
+
+.chart-label {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: right;
+    padding-right: 2vw;
+    letter-spacing: -0.01em;
+    grid-column: 1;
+}
+
+.chart-bar-wrapper {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+    position: relative;
+    height: 100%;
+    min-height: 36px;
+}
+
+.chart-bar {
+    height: 36px;
+    width: 0;
+    background: linear-gradient(90deg, #6E6E73 0%, #8E8E93 100%);
+    border-radius: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(142, 142, 147, 0.2);
+    min-width: 0;
+    align-self: flex-start;
+}
+
+/* All bars are gray by default */
+.chart-item .chart-bar {
+    background: linear-gradient(90deg, #6E6E73 0%, #8E8E93 100%);
+    box-shadow: 0 2px 8px rgba(142, 142, 147, 0.2);
+}
+
+/* Special gradient for Liposuction Surgery - Apple-like purple-blue-orange */
+.chart-item-highlight .chart-bar {
+    height: 42px;
+    background: linear-gradient(90deg, #AF52DE 0%, #5856D6 25%, #007AFF 50%, #5AC8FA 75%, #FF9500 100%);
+    box-shadow: 0 4px 16px rgba(175, 82, 222, 0.4), 0 2px 8px rgba(0, 122, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+}
+
+.chart-value {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.8s;
+    grid-column: 3;
+    min-width: 120px;
+    text-align: left;
+}
+
+.comparison-slide.visible .chart-value {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+    .chart-item {
+        grid-template-columns: 1fr;
+        gap: 1vh;
+    }
+    
+    .chart-label {
+        text-align: left;
+        padding-right: 0;
+        grid-column: 1;
+    }
+    
+    .chart-bar-wrapper {
+        grid-column: 1;
+        width: 100%;
+    }
+    
+    .chart-value {
+        grid-column: 1;
+        text-align: left;
+    }
+    
+    .comparison-slide {
+        padding: 6vh 4vw;
+    }
+}
+

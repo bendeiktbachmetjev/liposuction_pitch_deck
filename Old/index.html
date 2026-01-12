@@ -1,0 +1,418 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>EasySuck</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles/main.css">
+</head>
+<body>
+    <!-- Title Slide -->
+    <!-- slides/title-slide.html -->
+    <button class="next-button" id="next-button">Next</button>
+
+    <div class="scroll-trigger"></div>
+
+    <div class="sticky-viewport">
+        <h1 class="brand-title" id="zoom-text">Power Assisted Liposuction Machine</h1>
+    </div>
+    <!-- End Title Slide -->
+
+    <!-- Statistics Slide -->
+    <section class="stats-slide" id="stats-slide">
+        <h2 class="stats-title" id="stats-title">Statistics</h2>
+        <div class="stats-container" id="stats-container">
+            <div class="stats-graph-wrapper">
+                <h3 class="stats-graph-title">Liposuction Procedures Over 20 Years</h3>
+                <svg class="stats-graph-svg" id="stats-graph-svg" viewBox="0 0 1200 400" preserveAspectRatio="xMidYMid meet">
+                    <defs>
+                        <linearGradient id="statsBarGradient" x1="100" y1="0%" x2="1120" y2="0%" gradientUnits="userSpaceOnUse">
+                            <stop offset="0%" style="stop-color:#AF52DE;stop-opacity:1" />
+                            <stop offset="50%" style="stop-color:#007AFF;stop-opacity:1" />
+                            <stop offset="100%" style="stop-color:#FF9500;stop-opacity:1" />
+                        </linearGradient>
+                    </defs>
+                    <!-- Grid lines -->
+                    <g class="stats-grid-lines">
+                        <line x1="100" y1="50" x2="100" y2="350" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                        <line x1="100" y1="350" x2="1120" y2="350" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    </g>
+                    <!-- Y-axis labels will be added dynamically -->
+                    <g class="stats-y-axis-labels" id="stats-y-axis-labels"></g>
+                    <!-- Bars will be added dynamically -->
+                    <g class="stats-bars" id="stats-bars"></g>
+                    <!-- Year labels -->
+                    <g class="stats-year-labels" id="stats-year-labels"></g>
+                </svg>
+            </div>
+            <div class="stats-info">
+                <p class="stats-info-text">70% of surgeons experience pain. The most common injuries are carpal tunnel syndrome, tennis elbow, rotator cuff issues, and lower back pain.</p>
+            </div>
+        </div>
+    </section>
+    <!-- End Statistics Slide -->
+
+    <!-- Icons Slide -->
+    <!-- slides/icons-slide.html -->
+    <section class="icons-slide" id="icons-slide">
+        <h2 class="question-text" id="question-text">
+            <span class="question-part-1">Is It </span>
+            <span class="question-part-2" id="question-part-2"></span>
+            <span class="typing-cursor" id="typing-cursor">|</span>
+            <span class="question-part-3">a Craft or a Medical Art?</span>
+        </h2>
+        <div class="icons-container">
+            <div class="icon-wrapper">
+                <img src="icons/craft.png" alt="Craft" class="icon icon-craft">
+            </div>
+            <div class="icon-wrapper">
+                <img src="icons/doctor.png" alt="Doctor" class="icon icon-doctor">
+            </div>
+        </div>
+    </section>
+    <!-- End Icons Slide -->
+
+    <!-- Comparison Chart Slide -->
+    <!-- slides/comparison-slide.html -->
+    <section class="comparison-slide" id="comparison-slide">
+        <h2 class="comparison-title" id="comparison-title">Physical Activity Comparison</h2>
+        <div class="chart-container" id="chart-container">
+            <div class="chart-item chart-item-highlight" data-value="375" data-label="Liposuction Surgery" data-color="#FF9500">
+                <div class="chart-label">Liposuction Surgery</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="--bar-value: 375;"></div>
+                    <span class="chart-value">~375 kcal/h</span>
+                </div>
+            </div>
+            
+            <div class="chart-item" data-value="375" data-label="Hiking (Cross-Country)" data-color="#5856D6">
+                <div class="chart-label">Hiking (Cross-Country)</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="--bar-value: 375;"></div>
+                    <span class="chart-value">~375 kcal/h</span>
+                </div>
+            </div>
+            
+            <div class="chart-item" data-value="325" data-label="Doubles Tennis" data-color="#FF2D55">
+                <div class="chart-label">Doubles Tennis</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="--bar-value: 325;"></div>
+                    <span class="chart-value">~325 kcal/h</span>
+                </div>
+            </div>
+            
+            <div class="chart-item" data-value="290" data-label="Brisk Walking (4 mph)" data-color="#5AC8FA">
+                <div class="chart-label">Brisk Walking (4 mph)</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="--bar-value: 290;"></div>
+                    <span class="chart-value">~290 kcal/h</span>
+                </div>
+            </div>
+            
+            <div class="chart-item" data-value="220" data-label="Weightlifting (General)" data-color="#AF52DE">
+                <div class="chart-label">Weightlifting (General)</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="--bar-value: 220;"></div>
+                    <span class="chart-value">~220 kcal/h</span>
+                </div>
+            </div>
+            
+            <div class="chart-item" data-value="110" data-label="Other Surgery (e.g., Rhinoplasty)" data-color="#8E8E93">
+                <div class="chart-label">Other Surgery (e.g., Rhinoplasty)</div>
+                <div class="chart-bar-wrapper">
+                    <div class="chart-bar" style="--bar-value: 110;"></div>
+                    <span class="chart-value">~110 kcal/h</span>
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Comparison Chart Slide -->
+
+    <!-- Research Slide -->
+    <section class="research-slide" id="research-slide">
+        <h2 class="research-title" id="research-title">Calories Required to Aspirate 150 ml Fat</h2>
+        <div class="research-container" id="research-container">
+            <div class="research-chart-wrapper">
+                <div class="research-chart-container" id="research-chart-container">
+                    <div class="research-chart-item" data-value="36" data-label="UAL" data-color="#AF52DE">
+                        <div class="research-chart-label">UAL (Ultrasound-Assisted)</div>
+                        <div class="research-chart-bar-wrapper">
+                            <div class="research-chart-bar"></div>
+                            <span class="research-chart-value">~36 kcal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="research-chart-item" data-value="37.5" data-label="PAL2 (MicroAire)" data-color="#007AFF">
+                        <div class="research-chart-label">PAL2 (MicroAire)</div>
+                        <div class="research-chart-bar-wrapper">
+                            <div class="research-chart-bar"></div>
+                            <span class="research-chart-value">~37–38 kcal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="research-chart-item" data-value="42.5" data-label="PAL1 (Euromi)" data-color="#5856D6">
+                        <div class="research-chart-label">PAL1 (Euromi)</div>
+                        <div class="research-chart-bar-wrapper">
+                            <div class="research-chart-bar"></div>
+                            <span class="research-chart-value">~42–43 kcal</span>
+                        </div>
+                    </div>
+                    
+                    <div class="research-chart-item" data-value="48" data-label="SAL" data-color="#FF9500">
+                        <div class="research-chart-label">SAL (Suction-Assisted)</div>
+                        <div class="research-chart-bar-wrapper">
+                            <div class="research-chart-bar"></div>
+                            <span class="research-chart-value">~48 kcal</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="research-study-image-wrapper">
+                <img src="icons/study_screenshot.png" alt="Research Study" class="research-study-image">
+            </div>
+        </div>
+    </section>
+    <!-- End Research Slide -->
+
+    <!-- Video Slide -->
+    <section class="video-slide" id="video-slide">
+        <div class="video-container">
+            <video class="video-player" id="video-player" loop playsinline preload="metadata">
+                <source src="icons/Untitled.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+        </div>
+    </section>
+    <!-- End Video Slide -->
+
+    <!-- Graph Slide 1 - Satisfaction -->
+    <section class="graph-slide" id="graph-slide-1">
+        <h2 class="graph-title" id="graph-title-1">Our Value</h2>
+        <div class="single-graph satisfaction-graph" id="satisfaction-graph">
+            <div class="graph-header">
+                <h3 class="graph-metric-title">Surgeons' Satisfaction</h3>
+                <div class="graph-values">
+                    <span class="value-before" id="satisfaction-before">68%</span>
+                    <span class="value-arrow">→</span>
+                    <span class="value-after" id="satisfaction-after">94%</span>
+                </div>
+            </div>
+            <svg class="single-graph-svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <linearGradient id="satisfactionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#AF52DE;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#AF52DE;stop-opacity:0" />
+                    </linearGradient>
+                </defs>
+                <!-- Grid -->
+                <g class="grid-lines">
+                    <line x1="80" y1="40" x2="80" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <line x1="80" y1="260" x2="720" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                </g>
+                <!-- Bar chart -->
+                <rect class="bar bar-before" x="200" y="180" width="120" height="0" fill="#AF52DE" rx="4"/>
+                <rect class="bar bar-after" x="480" y="180" width="120" height="0" fill="#AF52DE" rx="4"/>
+                <!-- Labels -->
+                <text x="260" y="280" class="bar-label">Before</text>
+                <text x="540" y="280" class="bar-label">After</text>
+            </svg>
+        </div>
+    </section>
+    <!-- End Graph Slide 1 -->
+
+    <!-- Graph Slide 2 - Precision -->
+    <section class="graph-slide" id="graph-slide-2">
+        <h2 class="graph-title" id="graph-title-2">Our Value</h2>
+        <div class="single-graph precision-graph" id="precision-graph">
+            <div class="graph-header">
+                <h3 class="graph-metric-title">Surgeon Precision</h3>
+                <div class="graph-values">
+                    <span class="value-before" id="precision-before">72%</span>
+                    <span class="value-arrow">→</span>
+                    <span class="value-after" id="precision-after">96%</span>
+                </div>
+            </div>
+            <svg class="single-graph-svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <linearGradient id="precisionGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#007AFF;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#007AFF;stop-opacity:0" />
+                    </linearGradient>
+                </defs>
+                <!-- Grid -->
+                <g class="grid-lines">
+                    <line x1="80" y1="40" x2="80" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <line x1="80" y1="260" x2="720" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                </g>
+                <!-- Bar chart -->
+                <rect class="bar bar-before" x="200" y="180" width="120" height="0" fill="#007AFF" rx="4"/>
+                <rect class="bar bar-after" x="480" y="180" width="120" height="0" fill="#007AFF" rx="4"/>
+                <!-- Labels -->
+                <text x="260" y="280" class="bar-label">Before</text>
+                <text x="540" y="280" class="bar-label">After</text>
+            </svg>
+        </div>
+    </section>
+    <!-- End Graph Slide 2 -->
+
+    <!-- Graph Slide 3 - Calories -->
+    <section class="graph-slide" id="graph-slide-3">
+        <h2 class="graph-title" id="graph-title-3">Our Value</h2>
+        <div class="single-graph calories-graph" id="calories-graph">
+            <div class="graph-header">
+                <h3 class="graph-metric-title">Calories Burned</h3>
+                <div class="graph-values">
+                    <span class="value-before" id="calories-before">375</span>
+                    <span class="value-unit">kcal/h</span>
+                    <span class="value-arrow">→</span>
+                    <span class="value-after" id="calories-after">213</span>
+                    <span class="value-unit">kcal/h</span>
+                </div>
+            </div>
+            <svg class="single-graph-svg" viewBox="0 0 800 300" preserveAspectRatio="xMidYMid meet">
+                <defs>
+                    <linearGradient id="caloriesGradient" x1="0%" y1="0%" x2="0%" y2="100%">
+                        <stop offset="0%" style="stop-color:#FF9500;stop-opacity:0.3" />
+                        <stop offset="100%" style="stop-color:#FF9500;stop-opacity:0" />
+                    </linearGradient>
+                </defs>
+                <!-- Grid -->
+                <g class="grid-lines">
+                    <line x1="80" y1="40" x2="80" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                    <line x1="80" y1="260" x2="720" y2="260" stroke="rgba(255,255,255,0.1)" stroke-width="1"/>
+                </g>
+                <!-- Bar chart (inverted - higher bar = more calories) -->
+                <rect class="bar bar-before" x="200" y="80" width="120" height="0" fill="#FF9500" rx="4"/>
+                <rect class="bar bar-after" x="480" y="150" width="120" height="0" fill="#FF9500" rx="4"/>
+                <!-- Labels -->
+                <text x="260" y="280" class="bar-label">Before</text>
+                <text x="540" y="280" class="bar-label">After</text>
+            </svg>
+        </div>
+    </section>
+    <!-- End Graph Slide 3 -->
+
+    <!-- OurMarket Slide 1 - TAM -->
+    <section class="ourmarket-slide" id="ourmarket-slide-1">
+        <h2 class="ourmarket-title" id="ourmarket-title-1">Our Market</h2>
+        <div class="market-card tam-card" id="tam-card">
+            <div class="market-header">
+                <h3 class="market-label">TAM</h3>
+                <p class="market-subtitle">Total Addressable Market</p>
+            </div>
+            <div class="market-content">
+                <div class="market-stat">
+                    <div class="stat-number" id="tam-clinics">30,000</div>
+                    <div class="stat-label-text">Clinics</div>
+                </div>
+                <div class="market-stat">
+                    <div class="stat-number stat-number-highlight" id="tam-profit">$240M</div>
+                    <div class="stat-label-text">Gross Profit</div>
+                </div>
+                <div class="market-bar-wrapper">
+                    <div class="market-bar tam-bar" id="tam-bar"></div>
+                </div>
+            </div>
+            <p class="market-message">Liposuction is the most performed surgery globally. With 30,000 surgical facilities worldwide, the total revenue potential for a standard-setting automated tool is $600M.</p>
+        </div>
+    </section>
+    <!-- End OurMarket Slide 1 -->
+
+    <!-- OurMarket Slide 2 - SAM -->
+    <section class="ourmarket-slide" id="ourmarket-slide-2">
+        <h2 class="ourmarket-title" id="ourmarket-title-2">Our Market</h2>
+        <div class="market-card sam-card" id="sam-card">
+            <div class="market-header">
+                <h3 class="market-label">SAM</h3>
+                <p class="market-subtitle">Serviceable Addressable Market</p>
+            </div>
+            <div class="market-content">
+                <div class="market-stat">
+                    <div class="stat-number" id="sam-clinics">13,500</div>
+                    <div class="stat-label-text">Clinics</div>
+                </div>
+                <div class="market-stat">
+                    <div class="stat-number stat-number-highlight" id="sam-profit">$108M</div>
+                    <div class="stat-label-text">Gross Profit</div>
+                </div>
+                <div class="market-bar-wrapper">
+                    <div class="market-bar sam-bar" id="sam-bar"></div>
+                </div>
+            </div>
+            <p class="market-message">We are prioritizing the USA and EU, which represent 45% of the global market. These regions have the highest labor costs and surgeon burnout rates, making them the ideal early adopters of automation.</p>
+        </div>
+    </section>
+    <!-- End OurMarket Slide 2 -->
+
+    <!-- OurMarket Slide 3 - SOM -->
+    <section class="ourmarket-slide" id="ourmarket-slide-3">
+        <h2 class="ourmarket-title" id="ourmarket-title-3">Our Market</h2>
+        <div class="market-card som-card" id="som-card">
+            <div class="market-header">
+                <h3 class="market-label">SOM</h3>
+                <p class="market-subtitle">Serviceable Obtainable Market</p>
+            </div>
+            <div class="market-content">
+                <div class="market-stat">
+                    <div class="stat-number" id="som-units">675</div>
+                    <div class="stat-label-text">Units</div>
+                </div>
+                <div class="market-stat">
+                    <div class="stat-number stat-number-highlight" id="som-profit">$5.4M</div>
+                    <div class="stat-label-text">Gross Profit</div>
+                </div>
+                <div class="market-bar-wrapper">
+                    <div class="market-bar som-bar" id="som-bar"></div>
+                </div>
+            </div>
+            <p class="market-message">Our initial goal is to capture 5% of the premium clinical market in the US and Europe. This provides a clear path to $13.5M in revenue and $5.4M in profit with a lean sales operation.</p>
+        </div>
+    </section>
+    <!-- End OurMarket Slide 3 -->
+
+    <!-- Our Competitors Slide -->
+    <section class="competitors-slide" id="competitors-slide">
+        <h2 class="competitors-title" id="competitors-title">Our Competitors</h2>
+        <div class="competitors-image-wrapper">
+            <img src="icons/map.png" alt="Our Competitors Map" class="competitors-image">
+        </div>
+    </section>
+    <!-- End Our Competitors Slide -->
+
+    <!-- Nord Clinic Partners Slide -->
+    <section class="partners-slide" id="partners-slide">
+        <h2 class="partners-title" id="partners-title">Nord Clinic</h2>
+        <div class="partners-content">
+            <p class="partners-text">Nord Clinic has a large number of partners for distributing our products</p>
+            <div class="partners-image-wrapper">
+                <img src="icons/work.png" alt="World Distribution" class="partners-image">
+            </div>
+        </div>
+    </section>
+    <!-- End Nord Clinic Partners Slide -->
+
+    <!-- Quote Slide -->
+    <section class="quote-slide" id="quote-slide">
+        <div class="quote-container">
+            <div class="quote-content">
+                <blockquote class="quote-text" id="quote-text">
+                    <span class="quote-open">&ldquo;</span>
+                    Surgery is an operation of the mind, not of the arm.
+                    <br>
+                    <span class="quote-close">&rdquo;</span>
+                </blockquote>
+                <div class="quote-image-wrapper">
+                    <img src="icons/DA1BF491-FCAC-48E7-B38D-4BAD59E4E79F.png" alt="Team" class="quote-image">
+                </div>
+            </div>
+        </div>
+    </section>
+    <!-- End Quote Slide -->
+
+    <script src="scripts/zoom.js"></script>
+</body>
+</html>
+ 

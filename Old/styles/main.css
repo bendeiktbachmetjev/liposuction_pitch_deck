@@ -1,0 +1,1623 @@
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    background-color: #000;
+    color: #f5f5f7;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    overflow-x: hidden;
+}
+
+.scroll-trigger {
+    height: 800vh; /* Increased height for smoother, more uniform scrolling */
+    position: relative;
+    z-index: 1;
+}
+
+.sticky-viewport {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    overflow: visible;
+    /* Add padding to prevent text clipping */
+    padding: 2vh 2vw;
+}
+
+.brand-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 5.5vw;
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    text-align: center;
+    background: linear-gradient(180deg, #ffffff 0%, #c6c6c6 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    will-change: font-size, opacity, filter;
+    /* Improve text rendering quality */
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    /* Force hardware acceleration */
+    backface-visibility: hidden;
+    -webkit-perspective: 1000px;
+    perspective: 1000px;
+    /* Prevent text selection and improve rendering */
+    user-select: none;
+    -webkit-user-select: none;
+    /* Ensure proper centering and prevent clipping */
+    margin: 0;
+    padding: 0.15em 0;
+    line-height: 1.2;
+    white-space: nowrap;
+    /* Prevent text clipping */
+    overflow: visible;
+    /* Add slight rounding effect with font-feature-settings */
+    font-feature-settings: "rlig" 1, "calt" 1;
+}
+
+.next-button {
+    position: fixed;
+    bottom: 40px;
+    right: 40px;
+    padding: 14px 34px;
+    border-radius: 999px;
+    border: none;
+    background: rgba(255, 255, 255, 0.85);
+    color: #000;
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.05em;
+    cursor: pointer;
+    z-index: 10;
+    transition: transform 0.3s ease, box-shadow 0.3s ease, opacity 0.3s ease;
+}
+
+.next-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 20px 35px rgba(255, 255, 255, 0.25);
+}
+
+.next-button.hidden {
+    opacity: 0;
+    pointer-events: none;
+}
+
+/* Statistics Slide Styles */
+.stats-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    padding: 4vh 5vw;
+    overflow-y: auto;
+}
+
+.stats-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.stats-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.stats-slide.visible .stats-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+}
+
+.stats-container {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    align-items: center;
+    margin: 0 auto;
+}
+
+.stats-slide.visible .stats-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.3s;
+}
+
+.stats-graph-wrapper {
+    width: 100%;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    padding: 5vh 4vw;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-slide.visible .stats-graph-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
+
+.stats-graph-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(1.5rem, 3vw, 2.2rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    text-align: center;
+    margin-bottom: 2vh;
+    letter-spacing: -0.02em;
+}
+
+.stats-graph-svg {
+    width: 100%;
+    height: auto;
+    max-height: 50vh;
+}
+
+.stats-grid-lines {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.stats-slide.visible .stats-grid-lines {
+    opacity: 1;
+    transition-delay: 0.6s;
+}
+
+.stats-bars rect {
+    transition: height 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), y 1.5s cubic-bezier(0.34, 1.56, 0.64, 1), opacity 0.6s ease;
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+    opacity: 0;
+}
+
+.stats-slide.visible .stats-bars rect {
+    opacity: 1;
+}
+
+.stats-year-labels text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 12px;
+    font-weight: 500;
+    fill: rgba(255, 255, 255, 0.6);
+    text-anchor: middle;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.stats-slide.visible .stats-year-labels text {
+    opacity: 1;
+    transition-delay: 1.0s;
+}
+
+.stats-y-axis-labels text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 13px;
+    font-weight: 500;
+    fill: rgba(255, 255, 255, 0.7);
+    text-anchor: end;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.stats-slide.visible .stats-y-axis-labels text {
+    opacity: 1;
+    transition-delay: 0.8s;
+}
+
+.stats-info {
+    width: 100%;
+    text-align: center;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.stats-slide.visible .stats-info {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.6s;
+}
+
+.stats-info-text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(1rem, 1.8vw, 1.4rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.85);
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    max-width: 900px;
+    margin: 0 auto;
+}
+
+
+@media (max-width: 768px) {
+    .stats-graph-wrapper {
+        padding: 3vh 3vw;
+    }
+    
+    .stats-graph-title {
+        font-size: clamp(1.2rem, 4vw, 1.8rem);
+        margin-bottom: 3vh;
+    }
+    
+    .stats-info-text {
+        font-size: clamp(0.9rem, 3vw, 1.2rem);
+    }
+    
+    .stats-slide {
+        padding: 4vh 4vw;
+    }
+    
+    .stats-title {
+        margin-bottom: 3vh;
+        font-size: clamp(1.8rem, 6vw, 3rem);
+    }
+}
+
+/* Video Slide Styles */
+.video-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    background: #000;
+}
+
+.video-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.video-container {
+    width: 100%;
+    height: 100%;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0;
+    transform: scale(0.95);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.video-slide.visible .video-container {
+    opacity: 1;
+    transform: scale(1);
+    transition-delay: 0.2s;
+}
+
+.video-player {
+    width: 100%;
+    height: 100%;
+    max-width: 100vw;
+    max-height: 100vh;
+    object-fit: contain;
+    background: #000;
+}
+
+@media (max-width: 768px) {
+    .video-player {
+        width: 100%;
+        height: 100%;
+    }
+}
+
+/* Graph Slide Styles */
+.graph-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    padding: 8vh 6vw;
+}
+
+.graph-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.graph-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 6vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.graph-slide.visible .graph-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.1s;
+}
+
+/* Removed graphs-container - now each slide has its own graph */
+
+.single-graph {
+    width: 100%;
+    max-width: 900px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    padding: 5vh 4vw;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+/* Graphs are always visible when their parent slide is visible */
+.graph-slide.visible .single-graph {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.graph-header {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+    margin-bottom: 2vh;
+}
+
+.graph-metric-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.02em;
+    margin: 0;
+}
+
+.graph-values {
+    display: flex;
+    align-items: baseline;
+    gap: 1.5vw;
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+}
+
+.value-before {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: -0.03em;
+}
+
+.value-after {
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.03em;
+}
+
+.value-arrow {
+    font-size: clamp(1.8rem, 3.5vw, 2.8rem);
+    color: rgba(255, 255, 255, 0.5);
+    font-weight: 300;
+}
+
+.value-unit {
+    font-size: clamp(1.2rem, 2.5vw, 1.8rem);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    margin-left: 0.5vw;
+}
+
+.single-graph-svg {
+    width: 100%;
+    height: auto;
+    max-height: 35vh;
+}
+
+.grid-lines {
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.single-graph.visible .grid-lines {
+    opacity: 1;
+    transition-delay: 0.3s;
+}
+
+.bar {
+    transition: height 1.2s cubic-bezier(0.34, 1.56, 0.64, 1), y 1.2s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 4px 12px rgba(0, 0, 0, 0.3));
+}
+
+.bar-label {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: 16px;
+    font-weight: 500;
+    fill: rgba(255, 255, 255, 0.7);
+    text-anchor: middle;
+    opacity: 0;
+    transition: opacity 0.6s ease;
+}
+
+.single-graph.visible .bar-label {
+    opacity: 1;
+    transition-delay: 0.8s;
+}
+
+@media (max-width: 768px) {
+    .graph-slide {
+        padding: 6vh 4vw;
+    }
+    
+    .graph-title {
+        font-size: clamp(1.8rem, 6vw, 3rem);
+        margin-bottom: 2vh;
+    }
+}
+
+/* OurMarket Slide Styles */
+.ourmarket-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 4;
+    background-color: #000;
+    padding: 4vh 5vw;
+    overflow-y: auto;
+}
+
+.ourmarket-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.ourmarket-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 6vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.ourmarket-slide.visible .ourmarket-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+/* Removed ourmarket-container - now each slide has its own card */
+
+.market-card {
+    width: 100%;
+    max-width: 1400px;
+    background: rgba(255, 255, 255, 0.03);
+    backdrop-filter: blur(30px);
+    border: 1px solid rgba(255, 255, 255, 0.08);
+    border-radius: 32px;
+    padding: 5vh 4vw;
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    pointer-events: auto;
+}
+
+/* Cards are always visible when their parent slide is visible */
+.ourmarket-slide.visible .market-card {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.market-header {
+    margin-bottom: 2vh;
+    text-align: center;
+}
+
+.market-label {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.95);
+    letter-spacing: -0.02em;
+    margin: 0 0 1vh 0;
+}
+
+.market-subtitle {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.2rem);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.6);
+    letter-spacing: -0.01em;
+    margin: 0;
+}
+
+.market-content {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 4vw;
+    align-items: center;
+    margin-bottom: 2vh;
+}
+
+.market-stat {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 1vh;
+}
+
+.stat-number {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(2.5rem, 5vw, 4.5rem);
+    font-weight: 700;
+    color: rgba(255, 255, 255, 0.9);
+    letter-spacing: -0.03em;
+    line-height: 1;
+}
+
+.stat-number-highlight {
+    background: linear-gradient(135deg, #AF52DE 0%, #007AFF 50%, #FF9500 100%);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+    filter: drop-shadow(0 4px 12px rgba(175, 82, 222, 0.3));
+}
+
+.stat-label-text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1.1rem);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.7);
+    letter-spacing: -0.01em;
+}
+
+.market-bar-wrapper {
+    grid-column: 1 / -1;
+    width: 100%;
+    height: 8px;
+    background: rgba(255, 255, 255, 0.1);
+    border-radius: 4px;
+    overflow: hidden;
+    position: relative;
+}
+
+.market-bar {
+    height: 100%;
+    width: 0;
+    border-radius: 4px;
+    transition: width 1.5s cubic-bezier(0.34, 1.56, 0.64, 1);
+    filter: drop-shadow(0 2px 8px rgba(0, 0, 0, 0.3));
+}
+
+.tam-bar {
+    background: linear-gradient(90deg, #AF52DE 0%, #007AFF 100%);
+}
+
+.sam-bar {
+    background: linear-gradient(90deg, #007AFF 0%, #5AC8FA 100%);
+}
+
+.som-bar {
+    background: linear-gradient(90deg, #5AC8FA 0%, #FF9500 100%);
+}
+
+/* Bar animations are handled by JavaScript */
+
+.market-message {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.95rem, 1.6vw, 1.3rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.8);
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    text-align: center;
+    margin: 4vh 0 0 0;
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+}
+
+/* Messages are always visible when their parent slide is visible */
+.ourmarket-slide.visible .market-message {
+    opacity: 1;
+    transform: translateY(0);
+}
+
+@media (max-width: 768px) {
+    .ourmarket-slide {
+        padding: 4vh 4vw;
+    }
+    
+    .ourmarket-title {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        margin-bottom: 2vh;
+    }
+    
+    .market-card {
+        padding: 4vh 4vw;
+    }
+    
+    .market-content {
+        grid-template-columns: 1fr;
+        gap: 3vh;
+    }
+    
+    .stat-number {
+        font-size: clamp(2rem, 6vw, 3.5rem);
+    }
+    
+    .market-message {
+        font-size: clamp(0.9rem, 2vw, 1.1rem);
+    }
+}
+
+/* Our Competitors Slide Styles */
+.competitors-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 4;
+    background-color: #000;
+    padding: 4vh 5vw;
+    overflow-y: auto;
+}
+
+.competitors-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.competitors-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 6vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.competitors-slide.visible .competitors-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.competitors-image-wrapper {
+    width: 100%;
+    max-width: 1600px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    opacity: 0;
+    transform: translateY(20px) scale(0.95);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.competitors-slide.visible .competitors-image-wrapper {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    transition-delay: 0.4s;
+}
+
+.competitors-image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 70vh;
+    object-fit: contain;
+    border-radius: 24px;
+    filter: drop-shadow(0 20px 40px rgba(255, 255, 255, 0.1));
+}
+
+@media (max-width: 768px) {
+    .competitors-slide {
+        padding: 4vh 4vw;
+    }
+    
+    .competitors-title {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        margin-bottom: 2vh;
+    }
+    
+    .competitors-image {
+        max-height: 60vh;
+    }
+}
+
+/* Nord Clinic Partners Slide Styles */
+.partners-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 4;
+    background-color: #000;
+    padding: 4vh 5vw;
+    overflow-y: auto;
+}
+
+.partners-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.partners-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.partners-slide.visible .partners-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.partners-content {
+    width: 100%;
+    max-width: 1600px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2vh;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.partners-slide.visible .partners-content {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
+
+.partners-text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(1.2rem, 2.5vw, 2rem);
+    font-weight: 400;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: center;
+    line-height: 1.6;
+    letter-spacing: -0.01em;
+    max-width: 1200px;
+    margin: 0;
+}
+
+.partners-image-wrapper {
+    width: 100%;
+    max-width: 1600px;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.partners-image {
+    width: 100%;
+    height: auto;
+    max-width: 100%;
+    max-height: 60vh;
+    object-fit: contain;
+    border-radius: 24px;
+    filter: drop-shadow(0 20px 40px rgba(255, 255, 255, 0.1));
+}
+
+@media (max-width: 768px) {
+    .partners-slide {
+        padding: 4vh 4vw;
+    }
+    
+    .partners-title {
+        font-size: clamp(2rem, 8vw, 3.5rem);
+        margin-bottom: 3vh;
+    }
+    
+    .partners-text {
+        font-size: clamp(1rem, 3vw, 1.5rem);
+    }
+    
+    .partners-image {
+        max-height: 50vh;
+    }
+}
+
+/* Quote Slide Styles */
+.quote-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+    padding: 8vh 6vw;
+}
+
+.quote-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.quote-container {
+    max-width: 1400px;
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.quote-slide.visible .quote-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.quote-content {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    gap: 5vw;
+    flex-wrap: wrap;
+}
+
+.quote-text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4.5rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    line-height: 1.3;
+    margin: 0;
+    padding: 0;
+    border: none;
+    quotes: none;
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    flex: 1;
+    min-width: 300px;
+    max-width: 600px;
+    text-align: left;
+}
+
+.quote-open,
+.quote-close {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: 1.5em;
+    font-weight: 300;
+    color: rgba(255, 255, 255, 0.6);
+    line-height: 0;
+    vertical-align: baseline;
+    display: inline-block;
+}
+
+.quote-open {
+    margin-right: 0.2em;
+}
+
+.quote-close {
+    margin-left: 0.2em;
+    vertical-align: bottom;
+    margin-top: 0.3em;
+}
+
+.quote-image-wrapper {
+    flex: 0 0 auto;
+    opacity: 0;
+    transform: translateX(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.4s;
+}
+
+.quote-slide.visible .quote-image-wrapper {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.quote-image {
+    width: 100%;
+    max-width: 800px;
+    height: auto;
+    border-radius: 20px;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(255, 255, 255, 0.1));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.quote-image:hover {
+    transform: scale(1.02);
+    filter: drop-shadow(0 25px 50px rgba(255, 255, 255, 0.15));
+}
+
+@media (max-width: 1024px) {
+    .quote-content {
+        flex-direction: column;
+        gap: 2vh;
+    }
+    
+    .quote-text {
+        text-align: center;
+        max-width: 100%;
+    }
+    
+    .quote-image-wrapper {
+        transform: translateY(20px);
+    }
+    
+    .quote-slide.visible .quote-image-wrapper {
+        transform: translateY(0);
+    }
+}
+
+@media (max-width: 768px) {
+    .quote-slide {
+        padding: 6vh 4vw;
+    }
+    
+    .quote-text {
+        font-size: clamp(1.8rem, 7vw, 3rem);
+    }
+    
+    .quote-image {
+        max-width: 500px;
+    }
+}
+
+/* Icons Slide Styles */
+.icons-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: scale(0.75);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 2;
+}
+
+.icons-slide.visible {
+    opacity: 1;
+    transform: scale(1);
+    pointer-events: auto;
+}
+
+.question-text {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 600;
+    letter-spacing: -0.02em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 8vh;
+    opacity: 0;
+    transform: translateY(-60px);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+    user-select: none;
+    -webkit-user-select: none;
+    line-height: 1.3;
+    padding: 0 4vw;
+}
+
+.question-part-2 {
+    display: inline-block;
+}
+
+.typing-cursor {
+    display: inline-block;
+    color: #ffffff;
+    font-weight: 300;
+    animation: blink 1s infinite;
+    margin-left: 2px;
+}
+
+.typing-cursor.hidden {
+    display: none;
+}
+
+@keyframes blink {
+    0%, 50% {
+        opacity: 1;
+    }
+    51%, 100% {
+        opacity: 0;
+    }
+}
+
+.icons-slide.visible .question-text {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0s;
+}
+
+.icons-container {
+    display: flex;
+    gap: 8vw;
+    align-items: center;
+    justify-content: flex-start;
+    flex-wrap: wrap;
+    padding: 4vw;
+    margin-top: 4vh;
+}
+
+.icon-wrapper {
+    display: flex;
+    align-items: center;
+    justify-content: flex-start;
+    opacity: 0;
+    transform: translateY(20px) scale(0.9);
+    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1), transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.icons-slide.visible .icon-wrapper {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+}
+
+.icons-slide.visible .icon-wrapper:nth-child(1) {
+    transition-delay: 0s;
+}
+
+.icons-slide.visible .icon-wrapper:nth-child(2) {
+    transition-delay: 0.05s;
+}
+
+.icon {
+    width: 20vw;
+    height: auto;
+    max-width: 300px;
+    min-width: 150px;
+    object-fit: contain;
+    filter: drop-shadow(0 20px 40px rgba(255, 255, 255, 0.1));
+    transition: transform 0.3s ease, filter 0.3s ease;
+}
+
+.icon:hover {
+    transform: scale(1.05);
+    filter: drop-shadow(0 25px 50px rgba(255, 255, 255, 0.2));
+}
+
+@media (max-width: 768px) {
+    .icons-container {
+        gap: 6vw;
+        flex-direction: column;
+    }
+    
+    .icon {
+        width: 30vw;
+        min-width: 120px;
+    }
+}
+
+/* Comparison Chart Slide Styles */
+.comparison-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    z-index: 3;
+    padding: 8vh 6vw;
+    overflow-y: auto;
+}
+
+.comparison-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.comparison-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 6vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.comparison-slide.visible .comparison-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.chart-container {
+    width: 100%;
+    max-width: 1200px;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    padding-right: 2vw;
+}
+
+.comparison-slide.visible .chart-container {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
+
+.chart-item {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    align-items: center;
+    gap: 2vw;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    padding-right: 1vw;
+}
+
+.comparison-slide.visible .chart-item {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.comparison-slide.visible .chart-item:nth-child(1) { transition-delay: 0.5s; }
+.comparison-slide.visible .chart-item:nth-child(2) { transition-delay: 0.6s; }
+.comparison-slide.visible .chart-item:nth-child(3) { transition-delay: 0.7s; }
+.comparison-slide.visible .chart-item:nth-child(4) { transition-delay: 0.8s; }
+.comparison-slide.visible .chart-item:nth-child(5) { transition-delay: 0.9s; }
+.comparison-slide.visible .chart-item:nth-child(6) { transition-delay: 1.0s; }
+
+.chart-label {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: right;
+    padding-right: 2vw;
+    letter-spacing: -0.01em;
+    grid-column: 1;
+}
+
+.chart-bar-wrapper {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+    position: relative;
+    height: 100%;
+    min-height: 36px;
+}
+
+.chart-bar {
+    height: 36px;
+    width: 0;
+    background: linear-gradient(90deg, #6E6E73 0%, #8E8E93 100%);
+    border-radius: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(142, 142, 147, 0.2);
+    min-width: 0;
+    align-self: flex-start;
+}
+
+/* All bars are gray by default */
+.chart-item .chart-bar {
+    background: linear-gradient(90deg, #6E6E73 0%, #8E8E93 100%);
+    box-shadow: 0 2px 8px rgba(142, 142, 147, 0.2);
+}
+
+/* Special gradient for Liposuction Surgery - Apple-like purple-blue-orange */
+.chart-item-highlight .chart-bar {
+    height: 42px;
+    background: linear-gradient(90deg, #AF52DE 0%, #5856D6 25%, #007AFF 50%, #5AC8FA 75%, #FF9500 100%);
+    box-shadow: 0 4px 16px rgba(175, 82, 222, 0.4), 0 2px 8px rgba(0, 122, 255, 0.3);
+    border: 1px solid rgba(255, 255, 255, 0.15);
+    border-radius: 50px;
+}
+
+.chart-value {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.8s;
+    grid-column: 3;
+    min-width: 120px;
+    text-align: left;
+    padding-left: 1.5vw;
+    padding-right: 1vw;
+}
+
+.comparison-slide.visible .chart-value {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+@media (max-width: 768px) {
+    .chart-item {
+        grid-template-columns: 1fr;
+        gap: 1vh;
+    }
+    
+    .chart-label {
+        text-align: left;
+        padding-right: 0;
+        grid-column: 1;
+    }
+    
+    .chart-bar-wrapper {
+        grid-column: 1;
+        width: 100%;
+    }
+    
+    .chart-value {
+        grid-column: 1;
+        text-align: left;
+    }
+    
+    .comparison-slide {
+        padding: 6vh 4vw;
+    }
+}
+
+
+/* Research Slide Styles */
+.research-slide {
+    position: fixed;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-start;
+    align-items: center;
+    pointer-events: none;
+    opacity: 0;
+    transform: translateY(40px) scale(0.95);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    overflow-y: auto;
+    z-index: 4;
+    background-color: #000;
+    padding: 4vh 5vw;
+    overflow-y: auto;
+    overflow-y: auto;
+}
+
+.research-slide.visible {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+    pointer-events: auto;
+}
+
+.research-title {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, "SF Pro Rounded", "SF Pro Display", system-ui, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+    font-size: clamp(2rem, 5vw, 4rem);
+    font-weight: 700;
+    letter-spacing: -0.03em;
+    color: #ffffff;
+    text-align: center;
+    margin-bottom: 2vh;
+    opacity: 0;
+    transform: translateY(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    text-rendering: optimizeLegibility;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+}
+
+.research-slide.visible .research-title {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.2s;
+}
+
+.research-container {
+    width: 100%;
+    max-width: 1400px;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    align-items: center;
+}
+
+.research-chart-wrapper {
+    width: 100%;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+.research-slide.visible .research-chart-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 0.4s;
+}
+
+.research-chart-container {
+    width: 100%;
+    max-width: 1000px;
+    display: flex;
+    flex-direction: column;
+    gap: 2vh;
+    margin: 0 auto;
+}
+
+.research-chart-item {
+    display: grid;
+    grid-template-columns: 220px 1fr auto;
+    align-items: center;
+    gap: 2vw;
+    opacity: 0;
+    transform: translateX(-30px);
+    transition: opacity 0.6s cubic-bezier(0.4, 0, 0.2, 1), transform 0.6s cubic-bezier(0.4, 0, 0.2, 1);
+    position: relative;
+    padding-right: 1vw;
+}
+
+.research-slide.visible .research-chart-item {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.research-slide.visible .research-chart-item:nth-child(1) { transition-delay: 0.5s; }
+.research-slide.visible .research-chart-item:nth-child(2) { transition-delay: 0.6s; }
+.research-slide.visible .research-chart-item:nth-child(3) { transition-delay: 0.7s; }
+.research-slide.visible .research-chart-item:nth-child(4) { transition-delay: 0.8s; }
+
+.research-chart-label {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.9rem, 1.5vw, 1.1rem);
+    font-weight: 500;
+    color: rgba(255, 255, 255, 0.9);
+    text-align: right;
+    padding-right: 2vw;
+    letter-spacing: -0.01em;
+    grid-column: 1;
+}
+
+.research-chart-bar-wrapper {
+    grid-column: 2;
+    display: flex;
+    align-items: center;
+    gap: 1.5vw;
+    position: relative;
+    height: 100%;
+    min-height: 36px;
+}
+
+.research-chart-bar {
+    height: 36px;
+    width: 0;
+    border-radius: 50px;
+    position: relative;
+    overflow: hidden;
+    transition: width 1.2s cubic-bezier(0.4, 0, 0.2, 1);
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+    min-width: 0;
+    align-self: flex-start;
+}
+
+.research-chart-item[data-color="#AF52DE"] .research-chart-bar {
+    background: linear-gradient(90deg, #AF52DE 0%, #5856D6 100%);
+    box-shadow: 0 4px 16px rgba(175, 82, 222, 0.4);
+}
+
+.research-chart-item[data-color="#007AFF"] .research-chart-bar {
+    background: linear-gradient(90deg, #007AFF 0%, #5AC8FA 100%);
+    box-shadow: 0 4px 16px rgba(0, 122, 255, 0.4);
+}
+
+.research-chart-item[data-color="#5856D6"] .research-chart-bar {
+    background: linear-gradient(90deg, #5856D6 0%, #007AFF 100%);
+    box-shadow: 0 4px 16px rgba(88, 86, 214, 0.4);
+}
+
+.research-chart-item[data-color="#FF9500"] .research-chart-bar {
+    background: linear-gradient(90deg, #FF9500 0%, #FFCC02 100%);
+    box-shadow: 0 4px 16px rgba(255, 149, 0, 0.4);
+}
+
+.research-chart-value {
+    font-family: "Inter", -apple-system, BlinkMacSystemFont, system-ui, sans-serif;
+    font-size: clamp(0.85rem, 1.3vw, 1rem);
+    font-weight: 600;
+    color: rgba(255, 255, 255, 0.95);
+    white-space: nowrap;
+    opacity: 0;
+    transform: translateX(-10px);
+    transition: opacity 0.4s cubic-bezier(0.4, 0, 0.2, 1), transform 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition-delay: 0.8s;
+    grid-column: 3;
+    min-width: 120px;
+    text-align: left;
+    padding-left: 1.5vw;
+    padding-right: 1vw;
+}
+
+.research-slide.visible .research-chart-value {
+    opacity: 1;
+    transform: translateX(0);
+}
+
+.research-study-image-wrapper {
+    width: 100%;
+    max-height: 35vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    max-width: 800px;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 0.8s cubic-bezier(0.4, 0, 0.2, 1), transform 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+    margin-top: 1vh;
+    max-height: 35vh;
+    object-fit: contain;
+    max-height: 35vh;
+    flex-shrink: 0;
+    overflow: hidden;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.research-slide.visible .research-study-image-wrapper {
+    opacity: 1;
+    transform: translateY(0);
+    transition-delay: 1.0s;
+}
+
+.research-study-image {
+    width: 100%;
+    height: auto;
+    border-radius: 16px;
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+    border: 1px solid rgba(255, 255, 255, 0.1);
+    max-height: 35vh;
+    object-fit: contain;
+}
+
+@media (max-width: 768px) {
+    .research-chart-item {
+        grid-template-columns: 1fr;
+        gap: 1vh;
+    }
+    
+    .research-chart-label {
+        text-align: left;
+        padding-right: 0;
+        grid-column: 1;
+    }
+    
+    .research-chart-bar-wrapper {
+        grid-column: 1;
+        width: 100%;
+    }
+    
+    .research-chart-value {
+        grid-column: 1;
+        text-align: left;
+    }
+    
+    .research-slide {
+        padding: 6vh 4vw;
+    }
+}
