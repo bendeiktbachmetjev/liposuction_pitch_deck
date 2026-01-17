@@ -1,5 +1,5 @@
 // Wait for DOM to be ready
-let zoomText, scrollTrigger, zoomButton, statsSlide, quoteSlide, iconsSlide, questionText, questionPart2, typingCursor, comparisonSlide, comparisonTitle, researchSlide, videoSlide, videoPlayer, graphSlide1, graphSlide2, graphSlide3, satisfactionGraph, precisionGraph, caloriesGraph, ourmarketSlide1, ourmarketSlide2, ourmarketSlide3, competitorsSlide, partnersSlide;
+let zoomText, scrollTrigger, zoomButton, statsSlide, quoteSlide, iconsSlide, questionText, questionPart2, typingCursor, comparisonSlide, comparisonTitle, researchSlide, videoSlide, videoPlayer, graphSlide1, graphSlide2, graphSlide3, beautyGraph, safetyGraph, easinessGraph, ourmarketSlide1, ourmarketSlide2, ourmarketSlide3, competitorsSlide, partnersSlide, gotomarketSlide;
 
 function initElements() {
     zoomText = document.getElementById('zoom-text');
@@ -19,14 +19,15 @@ function initElements() {
     graphSlide1 = document.getElementById('graph-slide-1');
     graphSlide2 = document.getElementById('graph-slide-2');
     graphSlide3 = document.getElementById('graph-slide-3');
-    satisfactionGraph = document.getElementById('satisfaction-graph');
-    precisionGraph = document.getElementById('precision-graph');
-    caloriesGraph = document.getElementById('calories-graph');
+    beautyGraph = document.getElementById('beauty-graph');
+    safetyGraph = document.getElementById('safety-graph');
+    easinessGraph = document.getElementById('easiness-graph');
     ourmarketSlide1 = document.getElementById('ourmarket-slide-1');
     ourmarketSlide2 = document.getElementById('ourmarket-slide-2');
     ourmarketSlide3 = document.getElementById('ourmarket-slide-3');
     competitorsSlide = document.getElementById('competitors-slide');
     partnersSlide = document.getElementById('partners-slide');
+    gotomarketSlide = document.getElementById('gotomarket-slide');
     
     if (!zoomText || !scrollTrigger) {
         console.error('Critical elements not found');
@@ -36,7 +37,7 @@ function initElements() {
 }
 
 // Presentation state
-let currentStage = 0; // 0 = title zoom, 1 = stats slide, 2 = icons slide, 3 = typing effect, 4 = comparison chart, 5 = research slide, 6 = video slide, 7 = graph slide 1 (satisfaction), 8 = graph 2 (precision), 9 = graph 3 (calories), 10 = market 1, 11 = market 2, 12 = market 3, 13 = competitors, 14 = partners, 15 = quote slide
+let currentStage = 0; // 0 = title zoom, 1 = stats slide, 2 = icons slide, 3 = typing effect, 4 = comparison chart, 5 = research slide, 6 = video slide, 7 = graph slide 1 (satisfaction), 8 = graph 2 (precision), 9 = graph 3 (calories), 10 = market 1, 11 = market 2, 12 = market 3, 13 = competitors, 14 = partners, 15 = gotomarket, 16 = quote slide
 let typingStarted = false;
 let typingCompleted = false;
 let isTransitioning = false;
@@ -73,10 +74,12 @@ const OURMARKET3_REVEAL_START = 0.95; // Third market slide (SOM) appears
 const OURMARKET3_REVEAL_END = 0.955; // Third market slide ends (0.005 range - shorter, fast transition)
 const COMPETITORS_REVEAL_START = 0.955; // Our Competitors slide appears
 const COMPETITORS_REVEAL_END = 0.975; // Our Competitors slide ends (0.02 range)
-const PARTNERS_REVEAL_START = 0.975; // Nord Clinic Partners slide appears
-const PARTNERS_REVEAL_END = 0.995; // Nord Clinic Partners slide ends (0.02 range)
-const QUOTE_REVEAL_START = 0.995; // Quote slide appears
-const QUOTE_REVEAL_END = 1.0; // Quote slide ends (0.005 range)
+const PARTNERS_REVEAL_START = 0.975; // NordClinic Partners slide appears
+const PARTNERS_REVEAL_END = 0.988; // NordClinic Partners slide ends (0.013 range)
+const GOTOMARKET_REVEAL_START = 0.988; // Go-to-Market Plan slide appears
+const GOTOMARKET_REVEAL_END = 0.998; // Go-to-Market Plan slide ends (0.01 range)
+const QUOTE_REVEAL_START = 0.998; // Quote slide appears
+const QUOTE_REVEAL_END = 1.0; // Quote slide ends (0.002 range)
 
 function smoothScroll(distance) {
     return new Promise((resolve) => {
@@ -221,9 +224,9 @@ zoomButton.addEventListener('click', () => {
                     isTransitioning = false;
                     // Animate first graph when slide becomes visible
                 setTimeout(() => {
-                        if (satisfactionGraph) {
-                            satisfactionGraph.classList.add('visible');
-                            animateGraph('satisfaction');
+                        if (beautyGraph) {
+                            beautyGraph.classList.add('visible');
+                            animateGraph('beauty');
                         }
                 }, 300);
                 });
@@ -240,9 +243,9 @@ zoomButton.addEventListener('click', () => {
                     isTransitioning = false;
                     // Animate second graph when slide becomes visible
                     setTimeout(() => {
-                        if (precisionGraph) {
-                            precisionGraph.classList.add('visible');
-                            animateGraph('precision');
+                        if (safetyGraph) {
+                            safetyGraph.classList.add('visible');
+                            animateGraph('safety');
                         }
                     }, 300);
                 });
@@ -259,9 +262,9 @@ zoomButton.addEventListener('click', () => {
                     isTransitioning = false;
                     // Animate third graph when slide becomes visible
             setTimeout(() => {
-                        if (caloriesGraph) {
-                            caloriesGraph.classList.add('visible');
-                            animateGraph('calories');
+                        if (easinessGraph) {
+                            easinessGraph.classList.add('visible');
+                            animateGraph('easiness');
                         }
                     }, 300);
                 });
@@ -344,7 +347,21 @@ zoomButton.addEventListener('click', () => {
                     isTransitioning = false;
                 });
             } else if (currentStage === 14) {
-                // Stage 14: Transition to quote slide
+                // Stage 14: Transition to gotomarket slide
+                isTransitioning = true;
+                // Stop in the middle of gotomarket range
+                const gotomarketRange = GOTOMARKET_REVEAL_END - GOTOMARKET_REVEAL_START;
+                const targetProgress = GOTOMARKET_REVEAL_START + (gotomarketRange * 0.4); // Middle of gotomarket range
+                const triggerHeight = scrollTrigger.offsetHeight - window.innerHeight;
+                const targetScroll = targetProgress * triggerHeight;
+                const distance = targetScroll - window.scrollY;
+                
+                smoothScroll(distance).then(() => {
+                    currentStage = 15;
+                    isTransitioning = false;
+                });
+            } else if (currentStage === 15) {
+                // Stage 15: Transition to quote slide
                 isTransitioning = true;
                 // Stop in the middle of quote slide range for full brightness
                 const quoteRange = QUOTE_REVEAL_END - QUOTE_REVEAL_START;
@@ -354,7 +371,7 @@ zoomButton.addEventListener('click', () => {
                 const distance = targetScroll - window.scrollY;
                 
                 smoothScroll(distance).then(() => {
-                    currentStage = 15;
+                    currentStage = 16;
                     isTransitioning = false;
                 });
                 }
@@ -534,6 +551,15 @@ function handleScroll() {
         partnersOpacity = 0; // Hidden outside range
     }
 
+    // Go-to-Market slide reveal (works in both directions)
+    let gotomarketOpacity = 1; // Always full brightness when in range
+    
+    if (progress >= GOTOMARKET_REVEAL_START && progress < GOTOMARKET_REVEAL_END) {
+        gotomarketOpacity = 1; // Full opacity immediately
+    } else {
+        gotomarketOpacity = 0; // Hidden outside range
+    }
+
     // Quote slide reveal (works in both directions)
     let quoteOpacity = 1; // Always full brightness when in range
     let quoteScale = 1.0;
@@ -565,6 +591,7 @@ function handleScroll() {
     const isInOurmarketArea = isInOurmarket1Area || isInOurmarket2Area || isInOurmarket3Area;
     const isInCompetitorsArea = progress >= COMPETITORS_REVEAL_START && progress < COMPETITORS_REVEAL_END;
     const isInPartnersArea = progress >= PARTNERS_REVEAL_START && progress < PARTNERS_REVEAL_END;
+    const isInGotomarketArea = progress >= GOTOMARKET_REVEAL_START && progress < GOTOMARKET_REVEAL_END;
     const isInQuoteArea = progress >= QUOTE_REVEAL_START && progress < QUOTE_REVEAL_END;
 
     requestAnimationFrame(() => {
@@ -678,14 +705,19 @@ function handleScroll() {
                     if (!isTransitioning) {
                         currentStage = 13; // On competitors slide
                     }
-                } else if (progress >= PARTNERS_REVEAL_START && progress < QUOTE_REVEAL_START) {
+                } else if (progress >= PARTNERS_REVEAL_START && progress < GOTOMARKET_REVEAL_START) {
                     // Only update currentStage if not transitioning
                     if (!isTransitioning) {
                         currentStage = 14; // On partners slide
                     }
+                } else if (progress >= GOTOMARKET_REVEAL_START && progress < QUOTE_REVEAL_START) {
+                    // Only update currentStage if not transitioning
+                    if (!isTransitioning) {
+                        currentStage = 15; // On gotomarket slide
+                    }
                 } else {
                     if (!isTransitioning) {
-                        currentStage = 15; // On quote slide
+                        currentStage = 16; // On quote slide
                     }
                 }
             }
@@ -836,7 +868,7 @@ function handleScroll() {
 
         // Update partners slide (works in both directions)
         if (partnersSlide) {
-            if (isInPartnersArea && !isInQuoteArea) {
+            if (isInPartnersArea && !isInGotomarketArea && !isInQuoteArea) {
                 partnersSlide.classList.add('visible');
                 partnersSlide.style.opacity = partnersOpacity;
                 partnersSlide.style.transform = 'translateY(0) scale(1)';
@@ -844,6 +876,19 @@ function handleScroll() {
                 partnersSlide.classList.remove('visible');
                 partnersSlide.style.opacity = 0;
                 partnersSlide.style.transform = 'translateY(40px) scale(0.95)';
+            }
+        }
+
+        // Update gotomarket slide (works in both directions)
+        if (gotomarketSlide) {
+            if (isInGotomarketArea && !isInQuoteArea) {
+                gotomarketSlide.classList.add('visible');
+                gotomarketSlide.style.opacity = gotomarketOpacity;
+                gotomarketSlide.style.transform = 'translateY(0) scale(1)';
+            } else {
+                gotomarketSlide.classList.remove('visible');
+                gotomarketSlide.style.opacity = 0;
+                gotomarketSlide.style.transform = 'translateY(40px) scale(0.95)';
             }
         }
 
@@ -1154,22 +1199,22 @@ function animateGraph(graphType) {
     setTimeout(() => {
         let graphElement, beforeHeight, afterHeight, beforeY, afterY;
         
-        if (graphType === 'satisfaction') {
-            graphElement = satisfactionGraph;
-            // 68% to 94% - bar heights relative to 100%
-            beforeHeight = 80 * 0.68; // 54.4
+        if (graphType === 'beauty') {
+            graphElement = beautyGraph;
+            // 89% to 94% - bar heights relative to 100%
+            beforeHeight = 80 * 0.89; // 71.2
             afterHeight = 80 * 0.94; // 75.2
-            beforeY = 260 - beforeHeight; // 205.6
+            beforeY = 260 - beforeHeight; // 188.8
             afterY = 260 - afterHeight; // 184.8
-        } else if (graphType === 'precision') {
-            graphElement = precisionGraph;
+        } else if (graphType === 'safety') {
+            graphElement = safetyGraph;
             // 72% to 96% - bar heights relative to 100%
             beforeHeight = 80 * 0.72; // 57.6
             afterHeight = 80 * 0.96; // 76.8
             beforeY = 260 - beforeHeight; // 202.4
             afterY = 260 - afterHeight; // 183.2
-        } else if (graphType === 'calories') {
-            graphElement = caloriesGraph;
+        } else if (graphType === 'easiness') {
+            graphElement = easinessGraph;
             // 375 to 213 - inverted (higher = more calories)
             // Scale: max 400 calories = 80px height
             beforeHeight = (375 / 400) * 80; // 75
